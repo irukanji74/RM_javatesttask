@@ -1,0 +1,86 @@
+
+import java.util.Scanner;
+
+// Возможно неправильно понял условие задачи, но ничего другого так и не придумал...
+public class FactorialMain
+{
+    public static void main(String[] args)
+    {
+        long result;
+        System.out.println("Input a number from 1 to 30");
+        Scanner sc = new Scanner(System.in);
+        
+        long num = sc.nextLong();
+        if(num <= 0){
+            System.out.println("The number can't be negative or nil");
+            return;
+        }
+
+        result = Server.dispatch(num);
+        System.out.println("The factorial of the entered number is " + result);
+    }
+    public static class Server{
+
+        public static long dispatch(long num){
+            long result = 1;
+            if(num > 1 && num <= 10){
+                result = Client1_10.factorial(num);
+            }
+            if (num > 10 && num <= 20)
+            {
+                result = Client10_20.factorial(num);
+            }
+            if (num > 20 && num <= 30)
+            {
+                result = Client20_30.factorial(num);
+            }
+
+            return result;
+        }
+    }
+
+    public  static  class Client1_10{
+
+       public  static  long factorial(long num){
+           long result;
+           if(num == 1){
+               result = 1;
+           }
+           else{
+               result = num * factorial(num - 1);
+           }
+           return result;
+       }
+   }
+
+    public  static  class Client10_20{
+        public  static  long factorial(long num){
+            long result ;
+
+            if(num == 10){
+                result =  Client1_10.factorial(10);
+            }
+            else{
+                result = num * Client1_10.factorial(num - 1);
+            }
+            return result;
+        }
+    }
+
+    // тут уже переполнение
+    public  static  class Client20_30{
+
+        public  static  long factorial(long num){
+            long result;
+
+            if(num == 20){
+                result =  Client10_20.factorial(20);
+            }
+            else{
+                result = num * Client10_20.factorial(num - 1);
+            }
+
+            return result;
+        }
+    }
+}
