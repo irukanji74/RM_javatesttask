@@ -1,0 +1,65 @@
+
+/*
+Если я правильно понял MapReduce это алгоритм по разбивке сложной и емкой задачи на несколько попроще
+для уменьшения загрузки выделенной памяти и для увеличения скорости обработки для
+параллельного выполнения задач на разных клиентах.
+*/
+public class FactorialMain
+{
+    public static void main(String[] args)
+    {
+        System.out.println("Input a number from 1 to 20");
+        Scanner sc = new Scanner(System.in);
+        long result;
+
+        long num = sc.nextLong();
+        if(num <= 0){
+            System.out.println("The number can't be negative or zero");
+            return;
+        }
+
+        result = Server.dispatch(num);
+        System.out.println("The factorial of the entered number is " + result);
+    }
+
+    public static class Server{
+
+        public static long dispatch(long num){
+            long resultEven = 1;
+            long resultOdd = 1;
+
+            for (long i = num; i > 0; i--)
+            {
+                if(i%2 == 0){
+                    resultEven = Client.factorialEven(i);
+                }
+                else{
+                   resultOdd = Client.factorialOdd(i);
+                }
+            }
+
+            return resultEven * resultOdd;
+        }
+    }
+
+    public  static  class Client{
+
+        public static long resultEven = 1;
+        public static long resultOdd = 1;
+
+       public  static  long factorialEven(long num){
+
+           resultEven = resultEven * num;
+
+          return resultEven;
+       }
+
+        public  static  long factorialOdd(long num){
+
+           resultOdd = resultOdd * num;
+
+          return resultOdd;
+        }
+    }
+
+}
