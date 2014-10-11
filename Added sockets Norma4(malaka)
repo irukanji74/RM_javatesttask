@@ -1,0 +1,92 @@
+package factorial;
+
+import java.io.DataOutputStream;
+
+import java.net.*;
+import java.io.*;
+
+class Client {
+    public static void main(String[] ar) {
+        int serverPort = 1999; 
+        String address = "127.0.0.1"; 
+
+        try {
+            InetAddress ipAddress = InetAddress.getByName(address);
+            Socket socket = new Socket(ipAddress, serverPort); 
+
+            DataInputStream in = new DataInputStream(socket.getInputStream());
+            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+
+            BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
+            System.out.println("Input a number from 1 to 30");
+            long result;
+
+            while (true) {
+                long num = Long.valueOf(keyboard.readLine()); 
+                out.writeLong(num); 
+                out.flush(); 
+                result = in.readLong(); 
+                System.out.println("Факториал числа : " + num + " равен " + result);
+            }
+        } catch (Exception x) {
+            x.printStackTrace();
+        }
+    }
+}
+
+public class Server {
+    public static void main(String[] ar)    {
+        int port = 1999; // случайный порт (может быть любое число от 1025 до 65535)
+        try {
+            ServerSocket ss = new ServerSocket(port);
+            System.out.println("Waiting for a client...");
+
+            Socket socket = ss.accept();
+
+            DataInputStream in = new DataInputStream(socket.getInputStream());
+            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+
+            while(true) {
+                long resultEven = 1;
+                long resultOdd = 1;
+                
+                long num = in.readLong(); // ожидаем пока клиент пришлет строку текста.
+                
+                for (long i = num; i > 0; i--)
+                {
+                    if(i%2 == 0){
+                        resultEven = Factorial.factorialEven(i);
+                    }
+                    else{
+                        resultOdd = Factorial.factorialOdd(i);
+                    }
+                }
+                
+                out.writeLong(resultEven * resultOdd);
+                out.flush(); 
+            }
+        } catch(Exception e) {e.printStackTrace(); }
+    }
+
+    public  static  class Factorial{
+
+        public static long resultEven = 1;
+        public static long resultOdd = 1;
+
+        public  static  long factorialEven(long num){
+
+            resultEven = resultEven * num;
+
+            return resultEven;
+        }
+
+        public  static  long factorialOdd(long num){
+
+            resultOdd = resultOdd * num;
+
+            return resultOdd;
+        }
+    }
+}
+
+  
