@@ -36,9 +36,9 @@ class Client {
 
 public class Server {
     public static void main(String[] ar)    {
-        int port = 1999; // случайный порт (может быть любое число от 1025 до 65535)
+        int port = 1999; 
         try {
-            ServerSocket ss = new ServerSocket(port); // создаем сокет сервера и привязываем его к вышеуказанному порту
+            ServerSocket ss = new ServerSocket(port); 
 
             Socket socket = ss.accept(); 
 
